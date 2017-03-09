@@ -71,7 +71,11 @@ Tdef(\serial, {
 
 (
 if (~win.notNil) { ~win.close; };
-~win = Window("", Rect(80, 200, 1200, 675)).front;
+~winSize = 1200@675;
+~win = Window("", Rect((Window.screenBounds.width - ~winSize.x) / 2,
+                       (Window.screenBounds.height - ~winSize.y) / 2,
+                       ~winSize.x,
+                       ~winSize.y)).front;
 ~win.view.background = Color.white;
 ~canvas = UserView(~win, ~win.bounds.size);
 ~canvas.background = Color.white;
