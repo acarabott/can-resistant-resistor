@@ -40,11 +40,22 @@ Tdef(\serial, {
   }
 }).play();
 
-~splitPct = 0.5;
-~curve = 4.0;
-{~serial.putAll("%, %".format(~splitPct, ~curve))}.fork;
+(
+~ensureDecimalStr = {|num|
+  var str = num.asString;
+  if(str.includes($.)) { str } { str ++ ".0" };
+};
 
-~potMax = 990;
+~setCurve = {|splitPct, curve|
+  var splitStr = splitPct;
+  var curveStr = curve;
+
+  ~splitPct = splitPct;
+  ~curve = curve;
+
+  {~serial.putAll("%, %".format(splitStr, curveStr))}.fork;
+};
+~setCurve.(0.5, -2);
 
 ~servoFunc = {|input, min, max, splitPct|
   var range = max - min;
