@@ -10,6 +10,7 @@ const uint8_t servoMax = 20;
 uint8_t servoValue = 0;
 
 const uint8_t potPin = 0;
+const uint8_t potMin = 0;
 const uint16_t potMax = 990;
 uint16_t potValue = 0;
 
@@ -55,7 +56,7 @@ void loop() {
   // Logging
   Serial.print(millis());
   Serial.print(", ");
-  Serial.print(potValue);
+  Serial.print(linlin(potValue, potMin, potMax, 0.0, 1.0));
   Serial.print(", ");
-  Serial.println(servoValue);
+  Serial.println(linlin(servoValue, servoMin, servoMax, 0.0, 1.0));
 }
