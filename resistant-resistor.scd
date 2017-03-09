@@ -7,11 +7,14 @@
   baudrate: 9600,
   crtscts: true
 );
-)
 
 ~millis = 0;
 ~potValue = 0;
 ~servoValue = 0;
+~potMax = 990;
+
+)
+
 
 Tdef(\serial, {
   var str, byte, split;
