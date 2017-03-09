@@ -3,15 +3,14 @@
 
 (
 ~serial = SerialPort(
-  "/dev/tty.usbmodem14611",
+  "/dev/tty.usbmodem1451",
   baudrate: 9600,
   crtscts: true
+);
 
 MIDIClient.init;
 m = MIDIOut.newByName("IAC", "Bus 1");
 m.latency = 0.0;
-
-);
 
 ~millis = 0;
 ~potValue = 0;
