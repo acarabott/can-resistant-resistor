@@ -61,7 +61,7 @@ Tdef(\serial, {
   var range = max - min;
   var splitVal = range * splitPct;
   var splitPoint = min + splitVal;
-  if (input < splitPoint) {
+  if (input <= splitPoint) {
     input.lincurve(min, splitPoint, 0.0, 1.0, ~curve);
   } {
     input.lincurve(splitPoint, max, 1.0, 0.0, ~curve.neg);
