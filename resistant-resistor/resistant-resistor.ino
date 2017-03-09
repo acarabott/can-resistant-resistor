@@ -5,17 +5,17 @@
 
 Servo servo;
 const uint8_t servoPin = 9;
-const uint8_t servoMin = 0;
+const uint8_t servoMin = 7;
 const uint8_t servoMax = 20;
 uint8_t servoValue = 0;
 
 const uint8_t potPin = 0;
-const uint8_t potMin = 0;
+const uint8_t potMin = 20;
 const uint16_t potMax = 990;
 uint16_t potValue = 0;
 
-float splitPct = 0.5;
-float curve = 4.0;
+uint16_t splitPct = 0;
+int16_t curve = 4;
 
 void setup() {
   Serial.begin(9600);
@@ -25,12 +25,22 @@ void setup() {
   Serial.println(millis());
 }
 
-uint16_t servoFunc(uint16_t input) {
-  const uint16_t splitPoint = potMax * splitPct;
-  if (input < splitPoint) {
-    return lincurve(input, 0, splitPoint, servoMin, servoMax, curve);
+uint16_t servoFunc(uint16_t input, uint16_t splitPct) {
+  const double split = (double(splitPct) / 100.0);
+  const double norm = linlin(input, potMin, potMax, 0.0, 1.0, true);
+
+  if (splitPct == 100) {
+    return lincurve(norm, 0, 1.0, servoMin, servoMax, curve);
   }
-  return lincurve(input, splitPoint, potMax, servoMax, servoMin, -curve);
+  if (splitPct == 0) {
+    return lincurve(norm, 0, 1.0, servoMax, servoMin, -curve);
+  }
+
+  if (norm < split) {
+    return lincurve(norm, 0, split, servoMin, servoMax, curve);
+  }
+
+  return lincurve(norm, split, 1.0, servoMax, servoMin, -curve);
 }
 
 void loop() {
@@ -42,15 +52,15 @@ void loop() {
     Serial.readBytesUntil("\n", buffer, bufSize);
 
     const char *splitToken = strtok(buffer, ",");
-    splitPct = constrain(strtod(splitToken, NULL), 0.0, 1.0);
+    splitPct = constrain(strtol(splitToken, NULL, 10), 0, 100);
 
     const char *curveToken = strtok(NULL, "");
-    curve = strtod(curveToken, NULL);
+    curve = strtol(curveToken, NULL, 10);
   }
 
   // IO
   potValue = min(analogRead(potPin), potMax);
-  servoValue = servoFunc(potValue);
+  servoValue = servoFunc(potValue, splitPct);
   servo.write(servoValue);
 
   // Logging
