@@ -67,6 +67,7 @@ Tdef(\serial, {
     input.lincurve(splitPoint, max, 1.0, 0.0, ~curve.neg);
   };
 };
+)
 
 (
 if (~win.notNil) { ~win.close; };
