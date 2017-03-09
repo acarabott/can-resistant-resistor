@@ -1,4 +1,5 @@
 "echo '%' | pbcopy".format(SerialPort.devices.last).unixCmd
+~serial.close
 
 (
 ~serial = SerialPort(
