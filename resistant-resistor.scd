@@ -80,16 +80,31 @@ if (~win.notNil) { ~win.close; };
 ~canvas = UserView(~win, ~win.bounds.size);
 ~canvas.background = Color.white;
 ~canvas.drawFunc = {
-  Pen.color = Color(0.17, 0.61, 0.83);
   ~canvas.bounds.width.do {|i|
     var maxHeight = ~canvas.bounds.height;
     var x = i;
     var norm = ~servoFunc.(i, 0, ~canvas.bounds.width, ~splitPct);
     var height = norm * maxHeight;
     var y = maxHeight - height;
+    var normx = i / ~canvas.bounds.width;
+    Pen.color = if (normx < ~potValue) { Color(0.17, 0.61, 0.83) } { Color(0.8, 0.8, 0.8) };
     Pen.fillRect(Rect(i, y, 1, height));
     Pen.lineTo(x, y);
   };
   Pen.stroke;
 };
+
+Tdef(\animation, {
+  inf.do {|i|
+    {~canvas.refresh;}.fork(AppClock);
+    0.01.wait;
+  }
+}).play(AppClock, quant:Quant(1));
+
 )
+
+
+
+
+
+~setCurve.(0.5, -1.0);
