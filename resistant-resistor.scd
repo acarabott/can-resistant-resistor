@@ -20,20 +20,23 @@ Tdef(\serial, {
   var str, byte, split;
 
   inf.do {|i|
+    var millis, potValue, servoValue;
     if(~serial.read == 10) {
       str = "";
       while({ byte = ~serial.read; byte != 13 }, {
         str = str ++ byte.asAscii;
       });
-
       split = str.split($,);
-      ~millis = split[0];
-      ~potValue = split[1];
-      ~servoValue = split[2];
 
-      // don't remove!
-      0.wait;
+      millis = split[0];
+      potValue = split[1];
+      servoValue = split[2];
+
+      ~millis = if(millis.isNil) { ~millis } { millis.asInt };
+      ~potValue = if(potValue.isNil) { ~potValue } { potValue.asFloat };
+      ~servoValue  = if(servoValue.isNil) { ~servoValue } { servoValue.asFloat };
     };
+    (1/60).wait;
   }
 }).play();
 
