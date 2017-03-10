@@ -94,7 +94,8 @@ if (~win.notNil) { ~win.close; };
     var height = norm * maxHeight;
     var y = maxHeight - height;
     var normx = i / ~canvas.bounds.width;
-    Pen.color = if (normx < ~potValue) {
+    var normPot = ~potValue / 95;
+    Pen.color = if (normx < normPot) {
       Color(0.17, 0.61, 0.83, norm.linlin(0, 1, 0.3, 1.0));
       } {
       Color(0.8, 0.8, 0.8);
@@ -135,4 +136,14 @@ Tdef(\miditest, {
 
 
 
-~setCurve.(60, 6);
+~setCurve.(100, -2);
+
+
+SynthDef(\sine, {|freq=220, out=0|
+  Out.ar(out,
+    SinOsc.ar([freq].lag(0.5), 0, 0.1).dup;
+  );
+}).add;
+
+~synth = Synth(\sine, [\freq, 220]);
+~synth.free
