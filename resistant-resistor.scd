@@ -31,26 +31,27 @@ Tdef(\cereal, {
         str = str ++ byte.asAscii;
       });
       split = str.split($,);
-
+      split.postln;
       millis = split[0];
       potValue = split[1];
       servoValue = split[2];
 
+      // split.postln;
       ~millis = if(millis.isNil) { ~millis } { millis.asInt };
       ~potValue = if(potValue.isNil) { ~potValue } { potValue.asFloat };
 
       ~prevServo = ~servoValue;
       ~servoValue  = if(servoValue.isNil) { ~servoValue } { servoValue.asFloat };
-      ~potValue.postln;
+      // ~potValue.postln;
 
       ~prevMidi = ~midi;
-      ~midi = ~servoValue.lincurve(0, 1.0, 64, 127, 2).asInt.postln;
+      ~midi = ~potValue.lincurve(0, 95, 0, 64, 2).asInt;
       if(~prevMidi != ~midi) {
-        m.control(0, 1, ~midi);
+        m.control(0, 2, ~midi);
+        ~synth.set(\freq, ~servoValue.linlin(0, 95, 220, 440));
       };
 
     };
-    0.05.wait;
   }
 }).play;
 
