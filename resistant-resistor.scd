@@ -45,7 +45,7 @@ Tdef(\cereal, {
       // ~potValue.postln;
 
       ~prevMidi = ~midi;
-      ~midi = ~potValue.lincurve(0, 95, 0, 64, 2).asInt;
+      ~midi = ~potValue.lincurve(0, 95, 0, 127, 2).asInt;
       if(~prevMidi != ~midi) {
         m.control(0, 2, ~midi);
         ~synth.set(\freq, ~servoValue.linlin(0, 95, 220, 440));
